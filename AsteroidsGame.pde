@@ -6,6 +6,7 @@ Star [] s= new Star[150];
 SpaceShip a = new SpaceShip();
 ArrayList <Asteroids> b = new ArrayList <Asteroids>();
 ArrayList <Bullets> c = new ArrayList <Bullets>();
+boolean cDestroyed = false;
 public void setup() 
 {
   background(0);
@@ -22,18 +23,6 @@ public void setup()
 public void draw() 
 {
   background(0);
-  for(int i=0; i<b.size();i++)
-  {
-    b.get(i).move();
-    b.get(i).show();
-    for(int j=0; j<c.size();j++)
-    {
-      if(dist(c.get(j).getX(), c.get(j).getY(), b.get(i).getX(), b.get(i).getY())<25)
-      {
-        b.remove(i);
-      }
-    }
-  }
   for(int i=0; i<s.length; i++)
   {
     s[i].show();
@@ -62,11 +51,11 @@ public void draw()
   }
   for(int i = 0; i < c.size(); i++) 
   {
-    if(c.get(i).getX() < 5 || c.get(i).getX() > 995)
+    if(c.get(i).getX() < 5 || c.get(i).getX() > 555)
     {
       c.remove(i);
     }
-    else if(c.get(i).getY() < 5 || c.get(i).getY() > 745)
+    else if(c.get(i).getY() < 5 || c.get(i).getY() > 555)
     {
       c.remove(i);
     }
@@ -75,6 +64,24 @@ public void draw()
       c.get(i).shoot();
       c.get(i).show();
       c.get(i).move();
+    }
+  }
+  for(int i=0; i<b.size();i++)
+  {
+    b.get(i).move();
+    b.get(i).show();
+    for(int j=0; j<c.size();j++)
+    {
+      if(dist(c.get(j).getX(), c.get(j).getY(), b.get(i).getX(), b.get(i).getY())<25)
+      {
+        b.remove(i);
+        cDestroyed = true;
+      }
+    }
+    if(cDestroyed == true)
+    {
+      c.remove(i);
+      cDestroyed = false;
     }
   }
 }
@@ -187,6 +194,10 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
 } 
 public void keyPressed()
 {
+  if (key== ' ')
+  {
+    c.add(new Bullets(a));
+  }
   if(key== 'w')
   {
     wIsPressed=true;
@@ -306,12 +317,5 @@ class Bullets extends Floater
   {
     myDirectionX = 5*Math.cos(myPointDirection*Math.PI/180) + a.getDirectionX();
     myDirectionY = 5*Math.sin(myPointDirection*Math.PI/180) + a.getDirectionY();
-  }
-  public void keyPressed()
-  {
-    if (key== ' ')
-    {
-     c.add(new Bullets(a));
-    }
   }
 }
